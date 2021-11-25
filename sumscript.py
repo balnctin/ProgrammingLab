@@ -16,7 +16,7 @@ def somma_valori(input_file):
             total += float(elements[1])
    
     my_file.close()
-    print('My sales: {}', total)
+    print('My sales:', total)
     return total
 
 somma_valori("sales.txt")
