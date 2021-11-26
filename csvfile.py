@@ -7,9 +7,8 @@ class CSVFile():
       for line in my_file:
           elements = line.split (',')
       if elements[0]!='Date':
-        data = line.split(',')
-        data.append(elements)
-        print('Dati nel file: {}'.format(self.name))
+          data.append(elements)
+          print('Dati nel file: {}'.format(self.name))
       my_file.close()
       return data
 CSVFile("shampoo_sales.csv")
