@@ -17,15 +17,6 @@ class CSVFile():
         print('Non posso aprire "my_file"')
         print('Non posso aprire un file non esistente: {}'.format(e))
 
-
-      #for line in my_file:
-          #elements = line.split (',')
-          #if elements[0]!='Date':
-              #data.append(elements)
-          
-      #my_file.close()
-      #return data
-
 my_file = CSVFile("shampoo_sales.csv")
 print('Dati nel file: {}'.format(my_file.get_data()))
 #supergetdata
