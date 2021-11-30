@@ -24,13 +24,13 @@ print('Dati nel file: {}'.format(my_file.get_data()))
 
 class NumericalCSVFile(CSVFile):
   def __init__ (self, name):
-      self.name = name
-      print('Name: {}'.format(self.name))
+     self.name = name
+     print('Name: {}'.format(self.name))
   def get_data(self):
       data = super().get_data()
       values = []
       for my_list in data:
-        for item in my_list:
+        for item in my_list[1:]:
           try:
             item = float(item)
             values.append(item)
