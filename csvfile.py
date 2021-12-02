@@ -46,7 +46,7 @@ class NumericalCSVFile(CSVFile):
   def __init__ (self, name):
      self.name = name
      print('Name: {}'.format(self.name))
-  def get_data(self, start = None, end = None):
+  def get_data(self):
       data = super().get_data()
       values = []
       for my_list in data:
@@ -58,5 +58,5 @@ class NumericalCSVFile(CSVFile):
                 print('Non posso convertire: {}'.format(item))
             
       return values
-my_file = NumericalCSVFile("shampoo_sales.csv")
-print('Dati:'.format(my_file.get_data()))
+my_filesecond = NumericalCSVFile("shampoo_sales.csv")
+print('Dati "{}":'.format(my_filesecond.get_data()))
