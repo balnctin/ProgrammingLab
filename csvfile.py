@@ -38,7 +38,7 @@ class CSVFile():
     my_file.close()
     return data[start:end]
 my_file = CSVFile("shampoo_sales.csv")
-print('Dati nel file: {}'.format(my_file.get_data()))
+print('Dati nel file: {}'.format(my_file.get_data(1.5,2)))
 
 
 
