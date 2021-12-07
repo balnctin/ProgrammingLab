@@ -24,10 +24,10 @@ class CSVFile():
          if start is not None and end is not None:
            if start > end:
              raise Exception('Errore: start deve essere minore di end, invece ho avuto start ="{}", end ="{}"'.format(start,end))
-           if start is None:
-              start = 0
-           if end is None:
-              end = len (data)
+           #if start is None:
+            #  start = 0
+           #if end is None:
+            #  end = len (data)
            if start is not None:
             if not isinstance (start,int):
               raise Exception('Errore: il parametro "start" deve essere un intero, non "{}"'.format(type(start)))
@@ -38,7 +38,7 @@ class CSVFile():
     my_file.close()
     return data[start:end]
 my_file = CSVFile("shampoo_sales.csv")
-print('Dati nel file: {}'.format(my_file.get_data(1.5,2)))
+print('Dati nel file: {}'.format(my_file.get_data()))
 
 
 
@@ -56,7 +56,7 @@ class NumericalCSVFile(CSVFile):
                 values.append(item)
               except:
                 print('Non posso convertire: {}'.format(item))
-            
+           
       return values
-my_filesecond = NumericalCSVFile("shampoo_sales.csv")
-print('Dati "{}":'.format(my_filesecond.get_data()))
+#my_filesecond = NumericalCSVFile("shampoo_sales.csv")
+#print('Dati "{}":'.format(my_filesecond.get_data()))
