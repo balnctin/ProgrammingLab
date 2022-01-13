@@ -1,36 +1,50 @@
-class MovingAverage():
-    def __init__ (self, len):
-        self.len = len
-        raise ExamException
-        
-    
-
-    def compute (self, series):
-        #prev_item = None
-        result = []
-        raise ExamException
-        for item in range (0, len(data)-1):
-            prev_item = None
-            #item = float(item)
-            #result.append(item)
-          
-            if prev_item is not None:
-                result.append(item)
-                average += (item + prev_item)/(len(data))
-      #assegno questo valore come precedente
-            prev_item = item
-         #calcolo l'incremento medio dividendo la somma degli incrementi
-        #sul totale dei dati (meno uno)
-            moving_average = average/((len(data)-1)
-        result = moving_average.compute()
-        return result
-
 class ExamException(Exception):
+    pass    
 
-        pass
-   
-    
 
-moving_average = MovingAverage(2)
-result = moving_average.compute([2,4,8,16])
-print(result) # Deve stampare a schermo [3,6,12]
+
+class MovingAverage():
+    def __init__(self, length):
+        self.length = length
+        
+        # Controllo che la lunghezza sia un intero
+        if  not isinstance(self.length , int):
+            raise ExamException("L'input non è un intero!" )
+        # Controllo che la lunghezza sia strettamente positiva 
+        if self.length <= 0 :
+            raise ExamException('La lunghezza della finestra è negativa o nulla')
+        
+
+
+    def compute(self , series ) :
+        #Controllo che la serie sia effettivamente una lista
+        if not isinstance(series, list):
+            raise ExamException("L'input non è una lista")
+
+        #Controllo che la serie non sia una lista vuota
+        elif series == [] :
+            raise ExamException('La lista contenente la serie è vuota')
+        
+        # Se la lista non è vuota, e solo allora , posso procedre con gli altri controlli
+        else:
+            #Controllo che la lunghezza della finestra non ecceda quella della serie
+            if self.length > len(series):
+                raise ExamException('La lunghezza della finestra è più grande di quella della serie')
+
+            # Controllo che gli elementi della serie siano numeri
+            for item in series:
+                if not isinstance(item, int) and not isinstance(item,float):
+                    raise ExamException('Uno degli elementi della lista non è un numero')
+        
+        
+        
+        
+        #Uso una lista vuota per salvare i risultati della media
+        results = []
+        # Faccio la media degli elementi richiesti e li salvo in results
+        for x in range(len(series)-self.length + 1):
+            element = sum(series[x : x+self.length])
+            element /= self.length
+            results.append(element)
+        return results
+
