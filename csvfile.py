@@ -19,15 +19,16 @@ class CSVFile():
 #se ho end, controllo che sia un intero
     for line in my_file:
          elements = line.split (',')
+         elements[-1] = elements[-1].strip()
          if elements[0]!='Date':
              data.append(elements)
          if start is not None and end is not None:
            if start > end:
              raise Exception('Errore: start deve essere minore di end, invece ho avuto start ="{}", end ="{}"'.format(start,end))
-           #if start is None:
-            #  start = 0
-           #if end is None:
-            #  end = len (data)
+           if start is None:
+              start = 0
+           if end is None:
+              end = len (data)
            if start is not None:
             if not isinstance (start,int):
               raise Exception('Errore: il parametro "start" deve essere un intero, non "{}"'.format(type(start)))

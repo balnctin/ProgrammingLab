@@ -1,50 +1,111 @@
+import csv
+import datetime
+from math import isnan
+
+
 class ExamException(Exception):
-    pass    
+    pass
 
 
-
-class MovingAverage():
-    def __init__(self, length):
-        self.length = length
-        
-        # Controllo che la lunghezza sia un intero
-        if  not isinstance(self.length , int):
-            raise ExamException("L'input non è un intero!" )
-        # Controllo che la lunghezza sia strettamente positiva 
-        if self.length <= 0 :
-            raise ExamException('La lunghezza della finestra è negativa o nulla')
-        
+class CSVFile():
+    def __init__(self, name):
+        self.name = name
+        print('Name: {}'.format(self.name))
+        if not isinstance(name, str):
+            raise ExamException(
+                'Errore: Il nome del file non é una stringa, non "{}" '.format(
+                    type(name)))
 
 
-    def compute(self , series ) :
-        #Controllo che la serie sia effettivamente una lista
-        if not isinstance(series, list):
-            raise ExamException("L'input non è una lista")
+class CSVTimeSeriesFile(CSVFile):
+    def __init__(self, name):
+        self.name = name
+        print('Name: {}'.format(self.name))
+        if not isinstance(name, str):
+            raise ExamException(
+                'Errore: Il nome del file non é una stringa, non "{}" '.format(
+                    type(name)))
 
-        #Controllo che la serie non sia una lista vuota
-        elif series == [] :
-            raise ExamException('La lista contenente la serie è vuota')
-        
-        # Se la lista non è vuota, e solo allora , posso procedre con gli altri controlli
-        else:
-            #Controllo che la lunghezza della finestra non ecceda quella della serie
-            if self.length > len(series):
-                raise ExamException('La lunghezza della finestra è più grande di quella della serie')
+    def get_data(self, start=None, end=None):
+        data = []
+        try:
+            my_file = open(self.name, 'r')
+        except ExamException as e:
+            print('Non posso aprire "my_file"')
+            print('Non posso aprire un file non esistente'.format(e))
 
-            # Controllo che gli elementi della serie siano numeri
-            for item in series:
-                if not isinstance(item, int) and not isinstance(item,float):
-                    raise ExamException('Uno degli elementi della lista non è un numero')
-        
-        
-        
-        
-        #Uso una lista vuota per salvare i risultati della media
-        results = []
-        # Faccio la media degli elementi richiesti e li salvo in results
-        for x in range(len(series)-self.length + 1):
-            element = sum(series[x : x+self.length])
-            element /= self.length
-            results.append(element)
-        return results
+        if start is not None and end is not None:
+                if start > end:
+                    raise ExamException(
+                        'Errore: start deve essere minore di end, invece ho avuto start ="{}", end ="{}"'
+                        .format(start, end))
+                if not isinstance(start, int):
+                        raise ExamException(
+                            'Errore: il parametro "start" deve essere un intero, non "{}"'
+                            .format(type(start)))
+                if not isinstance(end, int):
+                        raise ExamException(
+                            'Errore: il parametro "end" deve essere un numero intero, non "{}"'
+                            .format(type(end)))
+        csvreader = csv.reader(my_file)
+        header = []
+        header = next(csvreader)
+        for row in my_file:
+            row = row.split(',')
+            try: row[1] = int(row[1])
+            except: row[1]=0
+            if isnan(row[1]): row[1] = 0
+            elif row[1] < 0: row[1] = 0
+            else: row[1] = int(row[1])
+            data.append(row)    
+        my_file.close()
+        if start is None:
+                    start = 0
+        if end is None:
+                    end = len(data)
+        return data
 
+#time_series_file = CSVTimeSeriesFile('data.csv')
+#time_series = time_series_file.get_data()
+#print('Dati nel file: {}'.format(time_series_file.get_data()))
+
+def compute_avg_monthly_difference(time_series, first_year, last_year):
+    time_series_file = CSVTimeSeriesFile(name=time_series)
+    year = [0] * 12
+    fy = int(first_year)
+    ly = int(last_year)
+    rows = time_series_file.get_data(fy,ly)
+    print("CIAO",rows)
+    if not isinstance(rows, list):
+        raise ExamException("L'input non è una lista!")
+    elif rows == []:
+        raise ExamException("L'input contenente la serie è vuota!")
+    if not isinstance(first_year, str):
+        raise ExamException('Non è una stringa'.format(type(first_year)))
+    if not isinstance(last_year, str):
+        raise ExamException('Non è una stringa'.format(type(last_year)))
+    avg_monthly_difference = []
+    for idx, mese in enumerate(year):
+        mese = []
+        for row in rows:
+            rowY=int(
+            datetime.datetime.strptime(row[0], '%Y-%m').strftime("%Y"))
+            rowM=int(
+            datetime.datetime.strptime(row[0], '%Y-%m').strftime("%m"))
+            if rowY <= ly and rowY >= fy and rowM == (idx + 1):
+                mese.append(row)
+        value = 0
+        i = 0
+        for row in mese:
+          if row[1]==0: mese.remove(row)
+        while i < (len(mese) - 1):
+            diff = mese[i + 1][1] - mese[i][1]
+            value += diff
+            i += 1
+        avg_monthly_difference.append((value / (len(mese)-1)))
+    return avg_monthly_difference
+
+
+#time_series = "data3.csv"
+#print('Average monthly difference: {}'.format(
+ #   compute_avg_monthly_difference(time_series, "1949", "1951")))
